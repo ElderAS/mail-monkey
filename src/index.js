@@ -16,7 +16,6 @@ function MailMonkey() {
   this.interface = {
     config: opts => this.config(opts),
   }
-
   return this.interface
 }
 
