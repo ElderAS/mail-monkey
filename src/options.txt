@@ -1,0 +1,20 @@
+MailMonkey({
+  provider: {
+    name: 'Sendgrid',
+    key: ''
+  },
+  templateDir: '',
+  defaultData: {
+
+  },
+  handlebars: {
+    helpers: [{
+      name: 'eval',
+      function: 
+    }]
+  }
+  server: {
+    instance: EXPRESS,
+    endpoint: '/mail/test'
+  }
+})
