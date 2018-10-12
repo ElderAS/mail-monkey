@@ -4,6 +4,8 @@
 [![npm](https://img.shields.io/npm/dt/mail-monkey.svg?style=flat-square)](https://www.npmjs.com/package/mail-monkey)
 [![npm](https://img.shields.io/npm/v/mail-monkey.svg?style=flat-square)](https://www.npmjs.com/package/mail-monkey)
 
+![MailMonkey](./logo.png)
+
 Plugin to simplify the mailing process with the help of [MJML](https://mjml.io/) and [Handlebars](https://handlebarsjs.com/)
 
 ### Installation
