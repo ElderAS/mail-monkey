@@ -113,13 +113,23 @@ MailMonkey.prototype.setServer = function({ server }) {
   if (!server) return Log.error('Invalid server config')
   if (this.debug) Log.success(`Serving emails at ${server.endpoint}`)
 
-  server.endpoint += server.endpoint.substring(server.endpoint.length - 1) === '/' ? '' : '/'
-  server.instance.get(server.endpoint + ':template', (req, res, next) => {
+  let hasTemplateParam = /(:template\b)/g.test(server.endpoint)
+  if (!hasTemplateParam) server.endpoint += utils.hasTrailingSlash(server.endpoint) ? ':template' : '/:template'
+
+  function defaultResolver(req) {
+    return req.query
+  }
+
+  server.instance.get(server.endpoint, (req, res, next) => {
     let key = utils.CamelCase(req.params.template)
     let template = this.templates[key]
     if (!template) return res.sendStatus(404)
 
-    return res.send(template(Object.assign({}, req.query, this.defaultData)))
+    let resolver = server.resolver || defaultResolver
+
+    Promise.resolve(resolver(req))
+      .then(data => res.send(template(Object.assign({}, data, this.defaultData))))
+      .catch(err => res.status(500).send(err))
   })
 
   this.server = true

@@ -9,7 +9,12 @@ function CamelCase(val) {
   )
 }
 
+function hasTrailingSlash(val) {
+  return val.substring(val.length - 1) === '/'
+}
+
 module.exports = {
   Capitalize,
   CamelCase,
+  hasTrailingSlash,
 }

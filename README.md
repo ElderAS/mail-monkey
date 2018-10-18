@@ -145,11 +145,28 @@ MailMonkey.config({
   server: {
     instance: EXPRESSAPP,
     endpoint: '/mail', //All emails are available at /mail/TEMPLATENAME
+    resolver: function(req) {
+      //OPTIONAL
+      //Write your custom data resolver here
+      //This function should return your template data (async as Promise or sync Object)
+      //DEFAULT: returns req.query
+    },
   },
 })
 ```
 
-You can provide data via query strings
+`server.endpoint` uses the same syntax as [Express](https://expressjs.com/). `:template` is reserved by `mail-monkey` and will be appended to your endpoint config if it isn't present.
+
+**Examples (template name is "confirmation")**
+
+```
+ endpoint: '/mail' -> available @ /mail/confirmation
+ endpoint: '/' -> available @ /confirmation
+ endpoint: '/mail/:template/:YOURID' -> available @ /mail/confirmation/YOURID
+ endpoint: '/mail/:YOURID/:template' -> available @ /mail/YOURID/confirmation
+```
+
+`server.resolver` can be used to resolve data you want to have accessible in your template. By default it returns QueryStrings via `req.query`.
 
 #### debug
 
