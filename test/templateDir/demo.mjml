@@ -1,0 +1,40 @@
+<mjml>
+  <mj-head>
+    <mj-title>{{ app }} - {{ subject }}</mj-title>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Poppins, Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#333333" line-height="24px"></mj-text>
+      <mj-section padding="0px"></mj-section>
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#49769c">
+    <mj-section padding="10px 0 20px 0">
+      <mj-column>
+        <mj-text align="center" color="#ffffff" font-size="11px">{{ app }} - Lorem ipsum dolor sit.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="20px 20px 40px 20px" background-color="#FFFFFF">
+      <mj-column>
+        <mj-text align="center" font-weight="300" padding="30px 40px 0px 40px" font-size="32px" line-height="40px" color="#3a9acd">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, eos?</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section vertical-align="middle" background-color="#ebf4fa">
+      <mj-column width="100%">
+        <mj-image src="{{host}}/assets/lineshadow.png" alt="" align="center" border="none" padding="0px"></mj-image>
+        <mj-text align="center" padding="50px 60px 20px 60px" font-weight="300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, eos?</mj-text>
+        <mj-text align="center" padding="20px 60px">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, eos?
+        </mj-text>
+        <mj-text align="center" padding="20px 60px 20px 60px" font-weight="300">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, eos?
+        </mj-text>
+        <mj-button align="center" background-color="#3a9acd" color="#ffffff" font-size="16px" font-weight="400" border-radius="3px" href="#" inner-padding="15px 30px" padding-bottom="50px" padding-top="20px">Lorem ipsum</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="10px 0 20px 0">
+      <mj-column>
+        <mj-text align="center" color="#ffffff" font-size="11px">Lorem ipsum dolor - Lorem ipsum dolor</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

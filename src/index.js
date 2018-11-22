@@ -95,9 +95,9 @@ MailMonkey.prototype.setTemplateDir = function({ templateDir }) {
   return this
 }
 
-MailMonkey.prototype.setHandlebars = function(options = {}) {
-  if (!options.handlebars) return Log.error('Invalid handlebars config')
-  this.handlebars = HandlebarsBuilder(options)
+MailMonkey.prototype.setHandlebars = function({ handlebars }) {
+  if (!handlebars) return Log.error('Invalid handlebars config')
+  this.handlebars = HandlebarsBuilder(handlebars)
 
   return this
 }

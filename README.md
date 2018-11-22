@@ -75,21 +75,17 @@ MailMonkey.config({
 
 #### handlebars
 
-Sometimes you need more features like helpers.
+Sometimes you need more features like helpers or partials.
+You can do this with `configure`.
 
 It should look like this:
 
 ```js
 MailMonkey.config({
   handlebars: {
-    helpers: [
-      {
-        name: 'eval',
-        function: function(options) {
-          return new handlebars.SafeString(eval(options.fn(this)))
-        },
-      },
-    ],
+    configure: function(hb) {
+      // Modify Handlebars instance (hb) here...
+    },
   },
 })
 ```
