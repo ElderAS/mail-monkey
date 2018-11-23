@@ -58,7 +58,7 @@ MailMonkey.prototype.exposeTemplates = function() {
     this.interface[key] = ({
       to,
       from = R.path(['sender', 'email'], this.mailSettings),
-      data,
+      data = {},
       subject,
       attachments,
     }) => {
