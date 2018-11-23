@@ -73,6 +73,22 @@ MailMonkey.config({
 })
 ```
 
+#### mailSettings
+
+Set default settings for mail delivery.
+
+Currently only sender is implemented. (more will come, feel free to send PR)
+
+```js
+MailMonkey.config({
+  mailSettings: {
+    sender: {
+      email: '...', //All emails will use this address as sender, unless from is passed to mail function
+    },
+  },
+})
+```
+
 #### handlebars
 
 Sometimes you need more features like helpers or partials.

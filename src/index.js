@@ -3,15 +3,17 @@ const Providers = require('./providers')
 const Log = require('./log')
 const mjml2html = require('mjml')
 const utils = require('./utils')
+const R = require('ramda')
 const HandlebarsBuilder = require('./builders/handlebars')
 
-let validOptions = ['provider', 'handlebars', 'templateDir', 'defaultData', 'server', 'debug']
+let validOptions = ['provider', 'handlebars', 'templateDir', 'defaultData', 'mailSettings', 'server', 'debug']
 
 function MailMonkey() {
   this.server = null
   this.provider = null
   this.handlebars = HandlebarsBuilder()
   this.templates = {}
+  this.mailSettings = {}
   this.defaultData = {}
   this.interface = {
     config: opts => this.config(opts),
@@ -37,6 +39,12 @@ MailMonkey.prototype.setProvider = function({ provider }) {
   return this
 }
 
+MailMonkey.prototype.setMailSettings = function({ mailSettings = {} }) {
+  this.mailSettings = mailSettings
+
+  return this
+}
+
 MailMonkey.prototype.setDebug = function({ debug }) {
   this.debug = debug
 
@@ -47,7 +55,13 @@ MailMonkey.prototype.exposeTemplates = function() {
   if (!this.provider) return Log.error('Provider not configured')
 
   Object.entries(this.templates).forEach(([key, value]) => {
-    this.interface[key] = ({ to, from, data, subject, attachments }) => {
+    this.interface[key] = ({
+      to,
+      from = R.path(['sender', 'email'], this.mailSettings),
+      data,
+      subject,
+      attachments,
+    }) => {
       return this.provider.send({
         to,
         from,
