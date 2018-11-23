@@ -98,7 +98,7 @@ MailMonkey.prototype.setTemplateDir = function({ templateDir }) {
   this.templates = Object.keys(Templates).reduce((result, key) => {
     let entry = Templates[key]
     result[key] = function(data = {}) {
-      return mjml2html.default(entry(data)).html
+      return mjml2html(entry(data)).html
     }
 
     return result
