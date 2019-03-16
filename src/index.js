@@ -1,5 +1,5 @@
 const fs = require('fs')
-const Providers = require('./providers')
+let Providers = require('./providers')
 const Log = require('./log')
 const mjml2html = require('mjml')
 const utils = require('./utils')
@@ -11,11 +11,13 @@ let validOptions = ['provider', 'handlebars', 'templateDir', 'defaultData', 'mai
 function MailMonkey() {
   this.server = null
   this.provider = null
+  this.providers = Providers
   this.handlebars = HandlebarsBuilder()
   this.templates = {}
   this.mailSettings = {}
   this.defaultData = {}
   this.interface = {
+    addProvider: this.addProvider.bind(this),
     config: opts => this.config(opts),
   }
   return this.interface
@@ -32,9 +34,17 @@ MailMonkey.prototype.config = function(options) {
   return this
 }
 
+MailMonkey.prototype.addProvider = function(name, func) {
+  if (!name) return Log.error('Name is required')
+  if (!func || typeof func !== 'function') return Log.error('Function is required')
+  this.providers[name] = func
+
+  return this
+}
+
 MailMonkey.prototype.setProvider = function({ provider }) {
-  if (!provider || provider.name in Providers === undefined) return Log.error('Invalid provider')
-  this.provider = Providers[provider.name]({ key: provider.key })
+  if (!provider || provider.name in this.providers === undefined) return Log.error('Invalid provider')
+  this.provider = this.providers[provider.name](provider)
 
   return this
 }

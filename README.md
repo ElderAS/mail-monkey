@@ -60,7 +60,7 @@ The following props are available for configuration:
 
 #### provider
 
-Sets the mail provider. At the moment only [Sendgrid](https://sendgrid.com/) is implemented. (Drop a line if you would like to see more)
+Sets the mail provider. At the moment only [Sendgrid](https://sendgrid.com/) is implemented but you can implement custom providers with the `addProvider` method (see below).
 
 It should look like this:
 
@@ -69,6 +69,30 @@ MailMonkey.config({
   provider: {
     name: 'Sendgrid',
     key: 'abc', //Your Sendgrid API Key
+  },
+})
+```
+
+**How to add your own provider**
+
+```js
+MailMonkey.addProvider('YOUR_PROVIDER_NAME', function(options) {
+  //options is the object passed in with the provider property when calling .config()
+  return {
+    send(data) {
+      //Send email with custom setup and return Promise
+    },
+  }
+})
+```
+
+And after adding your custom provider you can use it in `.config()`:
+
+```js
+MailMonkey.config({
+  provider: {
+    name: 'YOUR_PROVIDER_NAME',
+    //Pass in anything you need to initialize
   },
 })
 ```
