@@ -77,7 +77,7 @@ MailMonkey.prototype.exposeTemplates = function() {
         from,
         subject,
         attachments,
-        html: value(Object.assign(data, this.defaultData)),
+        html: value(Object.assign({}, this.defaultData, data)),
       })
     }
   })
