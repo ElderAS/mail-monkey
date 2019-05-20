@@ -152,7 +152,7 @@ MailMonkey.prototype.setServer = function({ server }) {
     let resolver = server.resolver || defaultResolver
 
     Promise.resolve(resolver(req))
-      .then(data => res.send(template(Object.assign({}, data, this.defaultData))))
+      .then(data => res.send(template(Object.assign({}, this.defaultData, data))))
       .catch(err => res.status(500).send(err))
   })
 
