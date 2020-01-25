@@ -75,23 +75,13 @@ MailMonkey.prototype.exposeTemplates = function() {
   if (!this.provider) return Log.error("Provider not configured");
 
   Object.entries(this.templates).forEach(([key, value]) => {
-    this.interface[key] = (
-      {
-        to,
-        from = R.path(["sender", "email"], this.mailSettings),
-        data = {},
-        subject,
-        attachments
-      },
-      ...args
-    ) => {
+    this.interface[key] = (payload, ...args) => {
+      let { data = {}, ...rest } = payload;
       return this.provider.send(
         {
-          to,
-          from,
-          subject,
-          attachments,
-          html: value(Object.assign({}, this.defaultData, data))
+          from: R.path(["sender", "email"], this.mailSettings),
+          html: value(Object.assign({}, this.defaultData, data)),
+          ...rest
         },
         ...args
       );
