@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"No tests yet\"",
-    "travis-deploy-once": "travis-deploy-once",
+    "travis-deploy-once": "travis-deploy-once --pro",
     "semantic-release": "semantic-release"
   },
   "repository": {
