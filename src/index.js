@@ -13,7 +13,7 @@ let validOptions = [
   "defaultData",
   "mailSettings",
   "server",
-  "debug"
+  "debug",
 ];
 
 function MailMonkey() {
@@ -26,15 +26,16 @@ function MailMonkey() {
   this.defaultData = {};
   this.interface = {
     addProvider: this.addProvider.bind(this),
-    config: opts => this.config(opts)
+    config: (opts) => this.config(opts),
+    Custom: this.Custom.bind(this),
   };
   return this.interface;
 }
 
-MailMonkey.prototype.config = function(options) {
+MailMonkey.prototype.config = function (options) {
   if (!options) return Log.error("Invalid config");
 
-  validOptions.forEach(key => {
+  validOptions.forEach((key) => {
     if (key in options === false) return;
     this["set" + utils.Capitalize(key)](options);
   });
@@ -42,7 +43,7 @@ MailMonkey.prototype.config = function(options) {
   return this;
 };
 
-MailMonkey.prototype.addProvider = function(name, func) {
+MailMonkey.prototype.addProvider = function (name, func) {
   if (!name) return Log.error("Name is required");
   if (!func || typeof func !== "function")
     return Log.error("Function is required");
@@ -51,7 +52,7 @@ MailMonkey.prototype.addProvider = function(name, func) {
   return this;
 };
 
-MailMonkey.prototype.setProvider = function({ provider }) {
+MailMonkey.prototype.setProvider = function ({ provider }) {
   if (!provider || provider.name in this.providers === undefined)
     return Log.error("Invalid provider");
   this.provider = this.providers[provider.name](provider);
@@ -59,19 +60,19 @@ MailMonkey.prototype.setProvider = function({ provider }) {
   return this;
 };
 
-MailMonkey.prototype.setMailSettings = function({ mailSettings = {} }) {
+MailMonkey.prototype.setMailSettings = function ({ mailSettings = {} }) {
   this.mailSettings = mailSettings;
 
   return this;
 };
 
-MailMonkey.prototype.setDebug = function({ debug }) {
+MailMonkey.prototype.setDebug = function ({ debug }) {
   this.debug = debug;
 
   return this;
 };
 
-MailMonkey.prototype.exposeTemplates = function() {
+MailMonkey.prototype.exposeTemplates = function () {
   if (!this.provider) return Log.error("Provider not configured");
 
   Object.entries(this.templates).forEach(([key, value]) => {
@@ -81,7 +82,7 @@ MailMonkey.prototype.exposeTemplates = function() {
         {
           from: R.path(["sender", "email"], this.mailSettings),
           html: value(Object.assign({}, this.defaultData, data)),
-          ...rest
+          ...rest,
         },
         ...args
       );
@@ -89,24 +90,41 @@ MailMonkey.prototype.exposeTemplates = function() {
   });
 };
 
-MailMonkey.prototype.setTemplateDir = function({ templateDir }) {
+MailMonkey.prototype.Custom = function (payload, template, ...args) {
+  let { data = {}, ...rest } = payload;
+
+  return this.provider.send(
+    {
+      from: R.path(["sender", "email"], this.mailSettings),
+      html: mjml2html(
+        this.handlebars.compile(template)(
+          Object.assign({}, this.defaultData, data)
+        )
+      ).html,
+      ...rest,
+    },
+    ...args
+  );
+};
+
+MailMonkey.prototype.setTemplateDir = function ({ templateDir }) {
   if (!templateDir) return Log.error("Invalid templateDir");
   let Templates = {};
 
   try {
     Templates = fs
       .readdirSync(templateDir)
-      .filter(file => file.includes(".mjml"))
-      .map(file => ({
+      .filter((file) => file.includes(".mjml"))
+      .map((file) => ({
         name: utils.CamelCase(file.replace(".mjml", "")),
         file: fs.readFileSync(
           templateDir +
             (templateDir.substring(templateDir.length - 1) === "/" ? "" : "/") +
             file,
           {
-            encoding: "utf-8"
+            encoding: "utf-8",
           }
-        )
+        ),
       }))
       .reduce((result, entry) => {
         result[entry.name] = this.handlebars.compile(entry.file);
@@ -118,7 +136,7 @@ MailMonkey.prototype.setTemplateDir = function({ templateDir }) {
 
   this.templates = Object.keys(Templates).reduce((result, key) => {
     let entry = Templates[key];
-    result[key] = function(data = {}) {
+    result[key] = function (data = {}) {
       return mjml2html(entry(data)).html;
     };
 
@@ -130,20 +148,20 @@ MailMonkey.prototype.setTemplateDir = function({ templateDir }) {
   return this;
 };
 
-MailMonkey.prototype.setHandlebars = function({ handlebars }) {
+MailMonkey.prototype.setHandlebars = function ({ handlebars }) {
   if (!handlebars) return Log.error("Invalid handlebars config");
   this.handlebars = HandlebarsBuilder(handlebars);
 
   return this;
 };
 
-MailMonkey.prototype.setDefaultData = function({ defaultData }) {
+MailMonkey.prototype.setDefaultData = function ({ defaultData }) {
   this.defaultData = defaultData;
 
   return this;
 };
 
-MailMonkey.prototype.setServer = function({ server }) {
+MailMonkey.prototype.setServer = function ({ server }) {
   if (this.server) return;
   if (!server) return Log.error("Invalid server config");
   if (this.debug) Log.success(`Serving emails at ${server.endpoint}`);
@@ -166,10 +184,10 @@ MailMonkey.prototype.setServer = function({ server }) {
     let resolver = server.resolver || defaultResolver;
 
     Promise.resolve(resolver(req))
-      .then(data =>
+      .then((data) =>
         res.send(template(Object.assign({}, this.defaultData, data)))
       )
-      .catch(err => res.status(500).send(err));
+      .catch((err) => res.status(500).send(err));
   });
 
   this.server = true;
